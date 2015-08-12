@@ -45,7 +45,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-2401' class='srclink' href='../src/bytes/buf/mod.rs.html#90-162' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-2705' class='srclink' href='../src/bytes/buf/mod.rs.html#92-164' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait MutBuf: <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> {
     fn <a href='#tymethod.remaining' class='fnname'>remaining</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>;
     fn <a href='#tymethod.advance' class='fnname'>advance</a>(&amp;mut self, cnt: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>);
@@ -71,7 +71,7 @@ length between 0 and <code>MutBuf::remaining()</code>.</p>
 </div><h3 id='method.write_slice' class='method stab '><code>fn <a href='#method.write_slice' class='fnname'>write_slice</a>(&amp;mut self, src: <a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a href='http://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h3><div class='docblock'><p>Write bytes from the given slice into the <code>MutBuf</code> and advance the
 cursor by the number of bytes written.
 Returns the number of bytes written.</p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>bytes</span>::{<span class='ident'>MutSliceBuf</span>, <span class='ident'>Buf</span>, <span class='ident'>MutBuf</span>};
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dst</span> <span class='op'>=</span> [<span class='number'>0</span>; <span class='number'>6</span>];
@@ -92,6 +92,7 @@ Returns the number of bytes written.</p>
     <li><code>impl <a class='trait' href='../bytes/trait.MutBuf.html' title='bytes::MutBuf'>MutBuf</a> for MutByteBuf</code></li>
 <li><code>impl <a class='trait' href='../bytes/trait.MutBuf.html' title='bytes::MutBuf'>MutBuf</a> for RingBuf</code></li>
 <li><code>impl&lt;'a&gt; <a class='trait' href='../bytes/trait.MutBuf.html' title='bytes::MutBuf'>MutBuf</a> for MutSliceBuf&lt;'a&gt;</code></li>
+<li><code>impl&lt;T: <a class='trait' href='../bytes/trait.MutBuf.html' title='bytes::MutBuf'>MutBuf</a>&gt; <a class='trait' href='../bytes/trait.MutBuf.html' title='bytes::MutBuf'>MutBuf</a> for Take&lt;T&gt;</code></li>
 <li><code>impl <a class='trait' href='../bytes/trait.MutBuf.html' title='bytes::MutBuf'>MutBuf</a> for <a class='struct' href='http://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code></li>
 </ul><script type="text/javascript" async
                               src="../implementors/bytes/trait.MutBuf.js">
