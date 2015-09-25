@@ -45,7 +45,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-2549' class='srclink' href='../src/bytes/buf/mod.rs.html#17-81' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-2547' class='srclink' href='../src/bytes/buf/mod.rs.html#17-81' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Buf {
     fn <a href='#tymethod.remaining' class='fnname'>remaining</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>;
     fn <a href='#tymethod.bytes' class='fnname'>bytes</a>&lt;'a&gt;(&amp;'a self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'a [</a><a href='http://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>;
@@ -69,7 +69,7 @@ between 0 and <code>Buf::remaining()</code>.</p>
 </div><h3 id='method.read_slice' class='method stab '><code>fn <a href='#method.read_slice' class='fnname'>read_slice</a>(&amp;mut self, dst: <a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;mut [</a><a href='http://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h3><div class='docblock'><p>Read bytes from the <code>Buf</code> into the given slice and advance the cursor by
 the number of bytes read.
 Returns the number of bytes read.</p>
-<pre class='rust rust-example-rendered'>
+<pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>bytes</span>::{<span class='ident'>SliceBuf</span>, <span class='ident'>Buf</span>};
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>SliceBuf</span>::<span class='ident'>wrap</span>(<span class='string'>b&quot;hello world&quot;</span>);
