@@ -470,7 +470,6 @@
 <span id="428">428</span>
 <span id="429">429</span>
 <span id="430">430</span>
-<span id="431">431</span>
 </pre><pre class='rust '>
 <span class='kw'>mod</span> <span class='ident'>byte</span>;
 <span class='kw'>mod</span> <span class='ident'>ring</span>;
@@ -569,7 +568,7 @@
     <span class='kw'>fn</span> <span class='ident'>remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span>;
 
     <span class='doccomment'>/// Advance the internal cursor of the MutBuf</span>
-    <span class='kw'>fn</span> <span class='ident'>advance</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cnt</span>: <span class='ident'>usize</span>);
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>advance</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cnt</span>: <span class='ident'>usize</span>);
 
     <span class='doccomment'>/// Returns true iff there is any more space for bytes to be written</span>
     <span class='kw'>fn</span> <span class='ident'>has_remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
@@ -617,9 +616,10 @@
                     <span class='ident'>cnt</span>);
 
                 <span class='ident'>off</span> <span class='op'>+=</span> <span class='ident'>cnt</span>;
+
             }
 
-            <span class='self'>self</span>.<span class='ident'>advance</span>(<span class='ident'>cnt</span>);
+            <span class='kw'>unsafe</span> { <span class='self'>self</span>.<span class='ident'>advance</span>(<span class='ident'>cnt</span>); }
         }
 
         <span class='ident'>len</span>
@@ -752,7 +752,7 @@
                 <span class='kw'>break</span>;
             }
 
-            <span class='ident'>buf</span>.<span class='ident'>advance</span>(<span class='ident'>i</span>);
+            <span class='kw'>unsafe</span> { <span class='ident'>buf</span>.<span class='ident'>advance</span>(<span class='ident'>i</span>); }
             <span class='ident'>cnt</span> <span class='op'>+=</span> <span class='ident'>i</span>;
         }
 
@@ -812,7 +812,7 @@
         <span class='ident'>usize</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>len</span>()
     }
 
-    <span class='kw'>fn</span> <span class='ident'>advance</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cnt</span>: <span class='ident'>usize</span>) {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>advance</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cnt</span>: <span class='ident'>usize</span>) {
         <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>len</span>() <span class='op'>+</span> <span class='ident'>cnt</span>;
 
         <span class='kw'>if</span> <span class='ident'>len</span> <span class='op'>&gt;</span> <span class='self'>self</span>.<span class='ident'>capacity</span>() {
@@ -822,9 +822,7 @@
             <span class='self'>self</span>.<span class='ident'>reserve</span>(<span class='ident'>cap</span> <span class='op'>-</span> <span class='ident'>len</span>);
         }
 
-        <span class='kw'>unsafe</span> {
-            <span class='self'>self</span>.<span class='ident'>set_len</span>(<span class='ident'>len</span>);
-        }
+        <span class='self'>self</span>.<span class='ident'>set_len</span>(<span class='ident'>len</span>);
     }
 
     <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>mut_bytes</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>] {
@@ -963,6 +961,6 @@
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     
-    <script async src="../../../search-index.js"></script>
+    <script defer src="../../../search-index.js"></script>
 </body>
 </html>
