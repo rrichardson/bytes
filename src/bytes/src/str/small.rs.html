@@ -9,7 +9,9 @@
 
     <title>small.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../../main.css">
+    
 
     
     
@@ -173,7 +175,7 @@
 <span id="131">131</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> {<span class='ident'>Bytes</span>, <span class='ident'>Rope</span>};
-<span class='kw'>use</span> <span class='ident'>traits</span>::{<span class='ident'>Buf</span>, <span class='ident'>MutBuf</span>, <span class='ident'>ByteStr</span>, <span class='ident'>ToBytes</span>};
+<span class='kw'>use</span> <span class='ident'>traits</span>::{<span class='ident'>Buf</span>, <span class='ident'>ByteStr</span>, <span class='ident'>ToBytes</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>cmp</span>, <span class='ident'>ops</span>};
 
 <span class='comment'>/*
@@ -327,6 +329,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -347,7 +351,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -356,13 +360,13 @@
     
 
     <script>
-        window.rootPath = "../../../";
+        window.rootPath = "../../../../";
         window.currentCrate = "bytes";
         window.playgroundUrl = "";
     </script>
-    <script src="../../../jquery.js"></script>
-    <script src="../../../main.js"></script>
+    <script src="../../../../jquery.js"></script>
+    <script src="../../../../main.js"></script>
     
-    <script defer src="../../../search-index.js"></script>
+    <script defer src="../../../../search-index.js"></script>
 </body>
 </html>
