@@ -619,9 +619,11 @@
 <span id="575">575</span>
 <span id="576">576</span>
 <span id="577">577</span>
+<span id="578">578</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> {<span class='ident'>Bytes</span>, <span class='ident'>ByteBuf</span>};
-<span class='kw'>use</span> <span class='ident'>traits</span>::{<span class='ident'>Buf</span>, <span class='ident'>ByteStr</span>, <span class='ident'>MutBuf</span>, <span class='ident'>ToBytes</span>};
+<span class='kw'>use</span> <span class='ident'>buf</span>::{<span class='ident'>Buf</span>, <span class='ident'>MutBuf</span>};
+<span class='kw'>use</span> <span class='ident'>str</span>::{<span class='ident'>ByteStr</span>, <span class='ident'>ToBytes</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>cmp</span>, <span class='ident'>mem</span>, <span class='ident'>ops</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
 

@@ -91,11 +91,6 @@
 <span id="47">47</span>
 <span id="48">48</span>
 <span id="49">49</span>
-<span id="50">50</span>
-<span id="51">51</span>
-<span id="52">52</span>
-<span id="53">53</span>
-<span id="54">54</span>
 </pre><pre class='rust '>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;bytes&quot;</span>]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>deny</span>(<span class='ident'>warnings</span>)]</span>
@@ -131,11 +126,6 @@
 };
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>u32</span>;
-
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>traits</span> {
-    <span class='doccomment'>//! All traits are re-exported here to allow glob imports.</span>
-    <span class='kw'>pub</span> <span class='kw'>use</span> {<span class='ident'>Buf</span>, <span class='ident'>MutBuf</span>, <span class='ident'>ByteStr</span>, <span class='ident'>ToBytes</span>};
-}
 
 <span class='kw'>const</span> <span class='ident'>MAX_CAPACITY</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>u32</span>::<span class='ident'>MAX</span> <span class='kw'>as</span> <span class='ident'>usize</span>;
 

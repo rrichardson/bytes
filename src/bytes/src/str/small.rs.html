@@ -173,9 +173,11 @@
 <span id="129">129</span>
 <span id="130">130</span>
 <span id="131">131</span>
+<span id="132">132</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> {<span class='ident'>Bytes</span>, <span class='ident'>Rope</span>};
-<span class='kw'>use</span> <span class='ident'>traits</span>::{<span class='ident'>Buf</span>, <span class='ident'>ByteStr</span>, <span class='ident'>ToBytes</span>};
+<span class='kw'>use</span> <span class='ident'>buf</span>::<span class='ident'>Buf</span>;
+<span class='kw'>use</span> <span class='ident'>str</span>::{<span class='ident'>ByteStr</span>, <span class='ident'>ToBytes</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>cmp</span>, <span class='ident'>ops</span>};
 
 <span class='comment'>/*
