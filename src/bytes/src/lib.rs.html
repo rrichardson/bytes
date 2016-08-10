@@ -66,81 +66,31 @@
 <span id="22">22</span>
 <span id="23">23</span>
 <span id="24">24</span>
-<span id="25">25</span>
-<span id="26">26</span>
-<span id="27">27</span>
-<span id="28">28</span>
-<span id="29">29</span>
-<span id="30">30</span>
-<span id="31">31</span>
-<span id="32">32</span>
-<span id="33">33</span>
-<span id="34">34</span>
-<span id="35">35</span>
-<span id="36">36</span>
-<span id="37">37</span>
-<span id="38">38</span>
-<span id="39">39</span>
-<span id="40">40</span>
-<span id="41">41</span>
-<span id="42">42</span>
-<span id="43">43</span>
-<span id="44">44</span>
-<span id="45">45</span>
-<span id="46">46</span>
-<span id="47">47</span>
-<span id="48">48</span>
-<span id="49">49</span>
 </pre><pre class='rust '>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;bytes&quot;</span>]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>deny</span>(<span class='ident'>warnings</span>)]</span>
 
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>stable_heap</span>;
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>alloc</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>buf</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>str</span>;
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>buf</span>::{
-    <span class='ident'>Buf</span>,
-    <span class='ident'>MutBuf</span>,
-    <span class='ident'>ByteBuf</span>,
-    <span class='ident'>MutByteBuf</span>,
-    <span class='ident'>RingBuf</span>,
-    <span class='ident'>ROByteBuf</span>,
-    <span class='ident'>SliceBuf</span>,
-    <span class='ident'>MutSliceBuf</span>,
-    <span class='ident'>Take</span>,
-    <span class='ident'>ReadExt</span>,
-    <span class='ident'>WriteExt</span>,
-};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>str</span>::{
-    <span class='ident'>ByteStr</span>,
-    <span class='ident'>Bytes</span>,
-    <span class='ident'>Rope</span>,
-    <span class='ident'>RopeBuf</span>,
-    <span class='ident'>SeqByteStr</span>,
-    <span class='ident'>SmallByteStr</span>,
-    <span class='ident'>SmallByteStrBuf</span>,
-    <span class='ident'>ToBytes</span>,
-};
+<span class='kw'>mod</span> <span class='ident'>buf</span>;
+<span class='kw'>mod</span> <span class='ident'>bytes</span>;
+
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>alloc</span>;
+
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>buf</span>::{<span class='ident'>Buf</span>, <span class='ident'>MutBuf</span>, <span class='ident'>Source</span>, <span class='ident'>Sink</span>, <span class='ident'>ReadExt</span>, <span class='ident'>WriteExt</span>, <span class='ident'>Fmt</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>buf</span>::<span class='ident'>append</span>::<span class='ident'>AppendBuf</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>buf</span>::<span class='ident'>block</span>::{<span class='ident'>BlockBuf</span>, <span class='ident'>NewBlock</span>, <span class='ident'>BlockBufCursor</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>buf</span>::<span class='ident'>byte</span>::{<span class='ident'>ByteBuf</span>, <span class='ident'>MutByteBuf</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>buf</span>::<span class='ident'>ring</span>::<span class='ident'>RingBuf</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>buf</span>::<span class='ident'>take</span>::<span class='ident'>Take</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>bytes</span>::<span class='ident'>Bytes</span>;
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>u32</span>;
 
 <span class='kw'>const</span> <span class='ident'>MAX_CAPACITY</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>u32</span>::<span class='ident'>MAX</span> <span class='kw'>as</span> <span class='ident'>usize</span>;
-
-
-<span class='comment'>/*
- *
- * ===== BufError  =====
- *
- */</span>
-
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>BufError</span> {
-    <span class='ident'>Underflow</span>,
-    <span class='ident'>Overflow</span>,
-}
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

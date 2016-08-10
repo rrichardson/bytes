@@ -300,9 +300,16 @@
 <span id="256">256</span>
 <span id="257">257</span>
 <span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
 </pre><pre class='rust '>
+<span class='kw'>use</span> {<span class='ident'>AppendBuf</span>, <span class='ident'>ByteBuf</span>, <span class='ident'>MutByteBuf</span>};
 <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Mem</span>, <span class='ident'>MemRef</span>};
-<span class='kw'>use</span> <span class='ident'>buf</span>::{<span class='ident'>AppendBuf</span>, <span class='ident'>ByteBuf</span>, <span class='ident'>MutByteBuf</span>};
 <span class='kw'>use</span> <span class='ident'>stable_heap</span> <span class='kw'>as</span> <span class='ident'>heap</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>mem</span>, <span class='ident'>ptr</span>, <span class='ident'>isize</span>, <span class='ident'>usize</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::{<span class='ident'>Cell</span>, <span class='ident'>UnsafeCell</span>};
@@ -381,8 +388,15 @@
     }
 
     <span class='doccomment'>/// Returns the number of buffers that the `Pool` holds.</span>
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>capacity</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>cap</span>
+    }
+
+    <span class='doccomment'>/// Returns the size of buffers allocated by the pool</span>
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>buffer_len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>buf_len</span>
     }
 
     <span class='doccomment'>/// Returns a new `ByteBuf` backed by a buffer from the pool. If the pool</span>

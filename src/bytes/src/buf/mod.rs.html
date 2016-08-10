@@ -441,57 +441,14 @@
 <span id="397">397</span>
 <span id="398">398</span>
 <span id="399">399</span>
-<span id="400">400</span>
-<span id="401">401</span>
-<span id="402">402</span>
-<span id="403">403</span>
-<span id="404">404</span>
-<span id="405">405</span>
-<span id="406">406</span>
-<span id="407">407</span>
-<span id="408">408</span>
-<span id="409">409</span>
-<span id="410">410</span>
-<span id="411">411</span>
-<span id="412">412</span>
-<span id="413">413</span>
-<span id="414">414</span>
-<span id="415">415</span>
-<span id="416">416</span>
-<span id="417">417</span>
-<span id="418">418</span>
-<span id="419">419</span>
-<span id="420">420</span>
-<span id="421">421</span>
-<span id="422">422</span>
-<span id="423">423</span>
-<span id="424">424</span>
-<span id="425">425</span>
-<span id="426">426</span>
-<span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
 </pre><pre class='rust '>
-<span class='kw'>mod</span> <span class='ident'>append</span>;
-<span class='kw'>mod</span> <span class='ident'>byte</span>;
-<span class='kw'>mod</span> <span class='ident'>ring</span>;
-<span class='kw'>mod</span> <span class='ident'>sink</span>;
-<span class='kw'>mod</span> <span class='ident'>slice</span>;
-<span class='kw'>mod</span> <span class='ident'>source</span>;
-<span class='kw'>mod</span> <span class='ident'>take</span>;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>append</span>;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>block</span>;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>byte</span>;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>ring</span>;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>take</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>append</span>::<span class='ident'>AppendBuf</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>byte</span>::{<span class='ident'>ByteBuf</span>, <span class='ident'>MutByteBuf</span>, <span class='ident'>ROByteBuf</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ring</span>::<span class='ident'>RingBuf</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>slice</span>::{<span class='ident'>SliceBuf</span>, <span class='ident'>MutSliceBuf</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>take</span>::<span class='ident'>Take</span>;
-
-<span class='kw'>use</span> {<span class='ident'>BufError</span>, <span class='ident'>ByteStr</span>, <span class='ident'>RopeBuf</span>};
+<span class='kw'>use</span> {<span class='ident'>Bytes</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>cmp</span>, <span class='ident'>fmt</span>, <span class='ident'>io</span>, <span class='ident'>ptr</span>, <span class='ident'>usize</span>};
 
 <span class='doccomment'>/// A trait for values that provide sequential read access to bytes.</span>
@@ -502,7 +459,7 @@
 
     <span class='doccomment'>/// Returns a slice starting at the current Buf position and of length</span>
     <span class='doccomment'>/// between 0 and `Buf::remaining()`.</span>
-    <span class='kw'>fn</span> <span class='ident'>bytes</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>];
+    <span class='kw'>fn</span> <span class='ident'>bytes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>];
 
     <span class='doccomment'>/// Advance the internal cursor of the Buf</span>
     <span class='kw'>fn</span> <span class='ident'>advance</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cnt</span>: <span class='ident'>usize</span>);
@@ -512,9 +469,11 @@
         <span class='self'>self</span>.<span class='ident'>remaining</span>() <span class='op'>&gt;</span> <span class='number'>0</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>copy_to</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Sink</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>dst</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='ident'>BufError</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>copy_to</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Sink</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>dst</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span>
             <span class='kw'>where</span> <span class='self'>Self</span>: <span class='ident'>Sized</span> {
-        <span class='ident'>dst</span>.<span class='ident'>copy_from</span>(<span class='self'>self</span>)
+        <span class='kw'>let</span> <span class='ident'>rem</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>remaining</span>();
+        <span class='ident'>dst</span>.<span class='ident'>copy_from</span>(<span class='self'>self</span>);
+        <span class='ident'>rem</span> <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>remaining</span>()
     }
 
     <span class='doccomment'>/// Read bytes from the `Buf` into the given slice and advance the cursor by</span>
@@ -522,25 +481,27 @@
     <span class='doccomment'>/// Returns the number of bytes read.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// use bytes::{SliceBuf, Buf};</span>
+    <span class='doccomment'>/// use std::io::Cursor;</span>
+    <span class='doccomment'>/// use bytes::Buf;</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut buf = SliceBuf::wrap(b&quot;hello world&quot;);</span>
+    <span class='doccomment'>/// let mut buf = Cursor::new(b&quot;hello world&quot;);</span>
     <span class='doccomment'>/// let mut dst = [0; 5];</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// buf.read_slice(&amp;mut dst);</span>
     <span class='doccomment'>/// assert_eq!(b&quot;hello&quot;, &amp;dst);</span>
     <span class='doccomment'>/// assert_eq!(6, buf.remaining());</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>read_slice</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>dst</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+    <span class='kw'>fn</span> <span class='ident'>read_slice</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>dst</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>off</span> <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>dst</span>.<span class='ident'>len</span>(), <span class='self'>self</span>.<span class='ident'>remaining</span>());
 
-        <span class='kw'>while</span> <span class='ident'>off</span> <span class='op'>&lt;</span> <span class='ident'>len</span> {
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>remaining</span>() <span class='op'>&gt;=</span> <span class='ident'>dst</span>.<span class='ident'>len</span>());
+
+        <span class='kw'>while</span> <span class='ident'>off</span> <span class='op'>&lt;</span> <span class='ident'>dst</span>.<span class='ident'>len</span>() {
             <span class='kw'>let</span> <span class='ident'>cnt</span>;
 
             <span class='kw'>unsafe</span> {
                 <span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>bytes</span>();
-                <span class='ident'>cnt</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>src</span>.<span class='ident'>len</span>(), <span class='ident'>len</span> <span class='op'>-</span> <span class='ident'>off</span>);
+                <span class='ident'>cnt</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>src</span>.<span class='ident'>len</span>(), <span class='ident'>dst</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='ident'>off</span>);
 
                 <span class='ident'>ptr</span>::<span class='ident'>copy_nonoverlapping</span>(
                     <span class='ident'>src</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>dst</span>[<span class='ident'>off</span>..].<span class='ident'>as_mut_ptr</span>(), <span class='ident'>cnt</span>);
@@ -550,24 +511,30 @@
 
             <span class='self'>self</span>.<span class='ident'>advance</span>(<span class='ident'>cnt</span>);
         }
-
-        <span class='ident'>len</span>
     }
 
     <span class='doccomment'>/// Read a single byte from the `Buf`</span>
     <span class='kw'>fn</span> <span class='ident'>read_byte</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dst</span> <span class='op'>=</span> [<span class='number'>0</span>];
-
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>read_slice</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>dst</span>) <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='prelude-val'>None</span>;
+        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>has_remaining</span>() {
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dst</span> <span class='op'>=</span> [<span class='number'>0</span>];
+            <span class='self'>self</span>.<span class='ident'>read_slice</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>dst</span>);
+            <span class='prelude-val'>Some</span>(<span class='ident'>dst</span>[<span class='number'>0</span>])
+        } <span class='kw'>else</span> {
+            <span class='prelude-val'>None</span>
         }
+    }
 
-        <span class='prelude-val'>Some</span>(<span class='ident'>dst</span>[<span class='number'>0</span>])
+    <span class='kw'>fn</span> <span class='ident'>peek_byte</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
+        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>has_remaining</span>() {
+            <span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='ident'>bytes</span>()[<span class='number'>0</span>])
+        } <span class='kw'>else</span> {
+            <span class='prelude-val'>None</span>
+        }
     }
 }
 
 <span class='doccomment'>/// A trait for values that provide sequential write access to bytes.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>MutBuf</span> : <span class='ident'>Sized</span> {
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>MutBuf</span> {
 
     <span class='doccomment'>/// Returns the number of bytes that can be written to the MutBuf</span>
     <span class='kw'>fn</span> <span class='ident'>remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span>;
@@ -586,9 +553,11 @@
     <span class='doccomment'>/// The returned byte slice may represent uninitialized memory.</span>
     <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>mut_bytes</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> [<span class='ident'>u8</span>];
 
-    <span class='kw'>fn</span> <span class='ident'>copy_from</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Source</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>src</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='ident'>BufError</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>copy_from</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Source</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>src</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span>
             <span class='kw'>where</span> <span class='self'>Self</span>: <span class='ident'>Sized</span> {
-        <span class='ident'>src</span>.<span class='ident'>copy_to</span>(<span class='self'>self</span>)
+        <span class='kw'>let</span> <span class='ident'>rem</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>remaining</span>();
+        <span class='ident'>src</span>.<span class='ident'>copy_to</span>(<span class='self'>self</span>);
+        <span class='ident'>rem</span> <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>remaining</span>()
     }
 
     <span class='doccomment'>/// Write bytes from the given slice into the `MutBuf` and advance the</span>
@@ -596,12 +565,13 @@
     <span class='doccomment'>/// Returns the number of bytes written.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// use bytes::{MutSliceBuf, Buf, MutBuf};</span>
+    <span class='doccomment'>/// use bytes::MutBuf;</span>
+    <span class='doccomment'>/// use std::io::Cursor;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut dst = [0; 6];</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// {</span>
-    <span class='doccomment'>///     let mut buf = MutSliceBuf::wrap(&amp;mut dst);</span>
+    <span class='doccomment'>///     let mut buf = Cursor::new(&amp;mut dst);</span>
     <span class='doccomment'>///     buf.write_slice(b&quot;hello&quot;);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///     assert_eq!(1, buf.remaining());</span>
@@ -609,16 +579,17 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// assert_eq!(b&quot;hello\0&quot;, &amp;dst);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>write_slice</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>src</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+    <span class='kw'>fn</span> <span class='ident'>write_slice</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>src</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>off</span> <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>src</span>.<span class='ident'>len</span>(), <span class='self'>self</span>.<span class='ident'>remaining</span>());
 
-        <span class='kw'>while</span> <span class='ident'>off</span> <span class='op'>&lt;</span> <span class='ident'>len</span> {
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>remaining</span>() <span class='op'>&gt;=</span> <span class='ident'>src</span>.<span class='ident'>len</span>(), <span class='string'>&quot;buffer overflow&quot;</span>);
+
+        <span class='kw'>while</span> <span class='ident'>off</span> <span class='op'>&lt;</span> <span class='ident'>src</span>.<span class='ident'>len</span>() {
             <span class='kw'>let</span> <span class='ident'>cnt</span>;
 
             <span class='kw'>unsafe</span> {
                 <span class='kw'>let</span> <span class='ident'>dst</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>mut_bytes</span>();
-                <span class='ident'>cnt</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>dst</span>.<span class='ident'>len</span>(), <span class='ident'>len</span> <span class='op'>-</span> <span class='ident'>off</span>);
+                <span class='ident'>cnt</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>dst</span>.<span class='ident'>len</span>(), <span class='ident'>src</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='ident'>off</span>);
 
                 <span class='ident'>ptr</span>::<span class='ident'>copy_nonoverlapping</span>(
                     <span class='ident'>src</span>[<span class='ident'>off</span>..].<span class='ident'>as_ptr</span>(),
@@ -631,8 +602,10 @@
 
             <span class='kw'>unsafe</span> { <span class='self'>self</span>.<span class='ident'>advance</span>(<span class='ident'>cnt</span>); }
         }
+    }
 
-        <span class='ident'>len</span>
+    <span class='kw'>fn</span> <span class='ident'>write_str</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>src</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
+        <span class='self'>self</span>.<span class='ident'>write_slice</span>(<span class='ident'>src</span>.<span class='ident'>as_bytes</span>());
     }
 }
 
@@ -645,32 +618,41 @@
 
 <span class='doccomment'>/// A value that writes bytes from itself into a `MutBuf`.</span>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Source</span> {
-    <span class='kw'>fn</span> <span class='ident'>copy_to</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>MutBuf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='ident'>BufError</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>copy_to</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>MutBuf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>);
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Source</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>] {
-    <span class='kw'>fn</span> <span class='ident'>copy_to</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>MutBuf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='ident'>BufError</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Ok</span>(<span class='ident'>buf</span>.<span class='ident'>write_slice</span>(<span class='self'>self</span>))
+    <span class='kw'>fn</span> <span class='ident'>copy_to</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>MutBuf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) {
+        <span class='ident'>buf</span>.<span class='ident'>write_slice</span>(<span class='self'>self</span>);
     }
 }
 
 <span class='kw'>impl</span> <span class='ident'>Source</span> <span class='kw'>for</span> <span class='ident'>u8</span> {
-    <span class='kw'>fn</span> <span class='ident'>copy_to</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>MutBuf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='ident'>BufError</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>copy_to</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>MutBuf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) {
         <span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span> [<span class='self'>self</span>];
-        <span class='prelude-val'>Ok</span>(<span class='ident'>buf</span>.<span class='ident'>write_slice</span>(<span class='kw-2'>&amp;</span><span class='ident'>src</span>))
+        <span class='ident'>buf</span>.<span class='ident'>write_slice</span>(<span class='kw-2'>&amp;</span><span class='ident'>src</span>);
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='ident'>ByteStr</span><span class='op'>&gt;</span> <span class='ident'>Source</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span> {
-    <span class='kw'>fn</span> <span class='ident'>copy_to</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>MutBuf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='ident'>BufError</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>src</span> <span class='op'>=</span> <span class='ident'>ByteStr</span>::<span class='ident'>buf</span>(<span class='self'>self</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='number'>0</span>;
+<span class='kw'>impl</span> <span class='ident'>Source</span> <span class='kw'>for</span> <span class='ident'>Bytes</span> {
+    <span class='kw'>fn</span> <span class='ident'>copy_to</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>MutBuf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) {
+        <span class='ident'>Source</span>::<span class='ident'>copy_to</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>buf</span>);
+    }
+}
 
-        <span class='kw'>while</span> <span class='ident'>src</span>.<span class='ident'>has_remaining</span>() <span class='op'>&amp;&amp;</span> <span class='ident'>buf</span>.<span class='ident'>has_remaining</span>() {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Source</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Bytes</span> {
+    <span class='kw'>fn</span> <span class='ident'>copy_to</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>MutBuf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) {
+        <span class='ident'>Source</span>::<span class='ident'>copy_to</span>(<span class='self'>self</span>.<span class='ident'>buf</span>(), <span class='ident'>buf</span>);
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Buf</span><span class='op'>&gt;</span> <span class='ident'>Source</span> <span class='kw'>for</span> <span class='ident'>T</span> {
+    <span class='kw'>fn</span> <span class='ident'>copy_to</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>MutBuf</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) {
+        <span class='kw'>while</span> <span class='self'>self</span>.<span class='ident'>has_remaining</span>() <span class='op'>&amp;&amp;</span> <span class='ident'>buf</span>.<span class='ident'>has_remaining</span>() {
             <span class='kw'>let</span> <span class='ident'>l</span>;
 
             <span class='kw'>unsafe</span> {
-                <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>src</span>.<span class='ident'>bytes</span>();
+                <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>bytes</span>();
                 <span class='kw'>let</span> <span class='ident'>d</span> <span class='op'>=</span> <span class='ident'>buf</span>.<span class='ident'>mut_bytes</span>();
                 <span class='ident'>l</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>s</span>.<span class='ident'>len</span>(), <span class='ident'>d</span>.<span class='ident'>len</span>());
 
@@ -680,28 +662,24 @@
                     <span class='ident'>l</span>);
             }
 
-            <span class='ident'>src</span>.<span class='ident'>advance</span>(<span class='ident'>l</span>);
+            <span class='self'>self</span>.<span class='ident'>advance</span>(<span class='ident'>l</span>);
             <span class='kw'>unsafe</span> { <span class='ident'>buf</span>.<span class='ident'>advance</span>(<span class='ident'>l</span>); }
-
-            <span class='ident'>res</span> <span class='op'>+=</span> <span class='ident'>l</span>;
         }
-
-        <span class='prelude-val'>Ok</span>(<span class='ident'>res</span>)
     }
 }
 
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Sink</span> {
-    <span class='kw'>fn</span> <span class='ident'>copy_from</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>Buf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='ident'>BufError</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>copy_from</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>Buf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>);
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Sink</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> [<span class='ident'>u8</span>] {
-    <span class='kw'>fn</span> <span class='ident'>copy_from</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>Buf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='ident'>BufError</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Ok</span>(<span class='ident'>buf</span>.<span class='ident'>read_slice</span>(<span class='self'>self</span>))
+    <span class='kw'>fn</span> <span class='ident'>copy_from</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>Buf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) {
+        <span class='ident'>buf</span>.<span class='ident'>read_slice</span>(<span class='self'>self</span>);
     }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Sink</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>copy_from</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>Buf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='ident'>BufError</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>copy_from</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>Buf</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) {
         <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
 
         <span class='self'>self</span>.<span class='ident'>clear</span>();
@@ -717,15 +695,11 @@
         <span class='kw'>unsafe</span> {
             {
                 <span class='kw'>let</span> <span class='ident'>dst</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>[..];
-                <span class='kw'>let</span> <span class='ident'>cnt</span> <span class='op'>=</span> <span class='ident'>buf</span>.<span class='ident'>read_slice</span>(<span class='ident'>slice</span>::<span class='ident'>from_raw_parts_mut</span>(<span class='ident'>dst</span>.<span class='ident'>as_mut_ptr</span>(), <span class='ident'>rem</span>));
-
-                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>cnt</span> <span class='op'>==</span> <span class='ident'>rem</span>);
+                <span class='ident'>buf</span>.<span class='ident'>read_slice</span>(<span class='ident'>slice</span>::<span class='ident'>from_raw_parts_mut</span>(<span class='ident'>dst</span>.<span class='ident'>as_mut_ptr</span>(), <span class='ident'>rem</span>));
             }
 
             <span class='self'>self</span>.<span class='ident'>set_len</span>(<span class='ident'>rem</span>);
         }
-
-        <span class='prelude-val'>Ok</span>(<span class='ident'>rem</span>)
     }
 }
 
@@ -776,44 +750,43 @@
  *
  */</span>
 
-<span class='kw'>impl</span> <span class='ident'>Buf</span> <span class='kw'>for</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Buf</span><span class='op'>+</span><span class='ident'>Send</span><span class='op'>+</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span>[<span class='ident'>u8</span>]<span class='op'>&gt;&gt;</span> <span class='ident'>Buf</span> <span class='kw'>for</span> <span class='ident'>io</span>::<span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>remaining</span>()
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>bytes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>bytes</span>()
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>advance</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cnt</span>: <span class='ident'>usize</span>) {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>advance</span>(<span class='ident'>cnt</span>);
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>read_slice</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>dst</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>read_slice</span>(<span class='ident'>dst</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Buf</span><span class='op'>+</span><span class='ident'>Send</span><span class='op'>+</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>fmt</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;Box&lt;Buf&gt; {{ remaining: {} }}&quot;</span>, <span class='self'>self</span>.<span class='ident'>remaining</span>())
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Buf</span> <span class='kw'>for</span> <span class='ident'>io</span>::<span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>get_ref</span>().<span class='ident'>len</span>() <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>position</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
+        <span class='self'>self</span>.<span class='ident'>get_ref</span>().<span class='ident'>as_ref</span>().<span class='ident'>len</span>() <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>position</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
     }
 
     <span class='kw'>fn</span> <span class='ident'>bytes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] {
         <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>position</span>() <span class='kw'>as</span> <span class='ident'>usize</span>;
-        <span class='kw-2'>&amp;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>get_ref</span>())[<span class='ident'>pos</span>..]
+        <span class='kw-2'>&amp;</span>(<span class='self'>self</span>.<span class='ident'>get_ref</span>().<span class='ident'>as_ref</span>())[<span class='ident'>pos</span>..]
     }
 
     <span class='kw'>fn</span> <span class='ident'>advance</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cnt</span>: <span class='ident'>usize</span>) {
         <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>position</span>() <span class='kw'>as</span> <span class='ident'>usize</span>;
-        <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='self'>self</span>.<span class='ident'>get_ref</span>().<span class='ident'>len</span>(), <span class='ident'>pos</span> <span class='op'>+</span> <span class='ident'>cnt</span>);
+        <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='self'>self</span>.<span class='ident'>get_ref</span>().<span class='ident'>as_ref</span>().<span class='ident'>len</span>(), <span class='ident'>pos</span> <span class='op'>+</span> <span class='ident'>cnt</span>);
         <span class='self'>self</span>.<span class='ident'>set_position</span>(<span class='ident'>pos</span> <span class='kw'>as</span> <span class='ident'>u64</span>);
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>AsMut</span><span class='op'>&lt;</span>[<span class='ident'>u8</span>]<span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>AsRef</span><span class='op'>&lt;</span>[<span class='ident'>u8</span>]<span class='op'>&gt;&gt;</span> <span class='ident'>MutBuf</span> <span class='kw'>for</span> <span class='ident'>io</span>::<span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+
+    <span class='kw'>fn</span> <span class='ident'>remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+        <span class='self'>self</span>.<span class='ident'>get_ref</span>().<span class='ident'>as_ref</span>().<span class='ident'>len</span>() <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>position</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
+    }
+
+    <span class='doccomment'>/// Advance the internal cursor of the MutBuf</span>
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>advance</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cnt</span>: <span class='ident'>usize</span>) {
+        <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>position</span>() <span class='kw'>as</span> <span class='ident'>usize</span>;
+        <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='self'>self</span>.<span class='ident'>get_mut</span>().<span class='ident'>as_mut</span>().<span class='ident'>len</span>(), <span class='ident'>pos</span> <span class='op'>+</span> <span class='ident'>cnt</span>);
+        <span class='self'>self</span>.<span class='ident'>set_position</span>(<span class='ident'>pos</span> <span class='kw'>as</span> <span class='ident'>u64</span>);
+    }
+
+    <span class='doccomment'>/// Returns a mutable slice starting at the current MutBuf position and of</span>
+    <span class='doccomment'>/// length between 0 and `MutBuf::remaining()`.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// The returned byte slice may represent uninitialized memory.</span>
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>mut_bytes</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> [<span class='ident'>u8</span>] {
+        <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>position</span>() <span class='kw'>as</span> <span class='ident'>usize</span>;
+        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> (<span class='self'>self</span>.<span class='ident'>get_mut</span>().<span class='ident'>as_mut</span>())[<span class='ident'>pos</span>..]
     }
 }
 
@@ -850,67 +823,24 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Buf</span> <span class='kw'>for</span> <span class='ident'>io</span>::<span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>get_ref</span>().<span class='ident'>len</span>() <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>position</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>bytes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] {
-        <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>position</span>() <span class='kw'>as</span> <span class='ident'>usize</span>;
-        <span class='kw-2'>&amp;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>get_ref</span>())[<span class='ident'>pos</span>..]
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>advance</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cnt</span>: <span class='ident'>usize</span>) {
-        <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>position</span>() <span class='kw'>as</span> <span class='ident'>usize</span>;
-        <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='self'>self</span>.<span class='ident'>get_ref</span>().<span class='ident'>len</span>(), <span class='ident'>pos</span> <span class='op'>+</span> <span class='ident'>cnt</span>);
-        <span class='self'>self</span>.<span class='ident'>set_position</span>(<span class='ident'>pos</span> <span class='kw'>as</span> <span class='ident'>u64</span>);
-    }
-}
-
 <span class='comment'>/*
  *
- * ===== Read impls =====
+ * ===== fmt impls =====
  *
  */</span>
 
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>impl_read</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>:<span class='ident'>ty</span>) <span class='op'>=&gt;</span> {
-        <span class='kw'>impl</span> <span class='ident'>io</span>::<span class='ident'>Read</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span> {
-            <span class='kw'>fn</span> <span class='ident'>read</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-                <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>has_remaining</span>() {
-                    <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='number'>0</span>);
-                }
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Fmt</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>B</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw'>pub</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>B</span>);
 
-                <span class='prelude-val'>Ok</span>(<span class='self'>self</span>.<span class='ident'>read_slice</span>(<span class='ident'>buf</span>))
-            }
-        }
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>B</span>: <span class='ident'>MutBuf</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Write</span> <span class='kw'>for</span> <span class='ident'>Fmt</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>B</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>write_str</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
+        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>write_str</span>(<span class='ident'>s</span>);
+        <span class='prelude-val'>Ok</span>(())
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>write_fmt</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>args</span>: <span class='ident'>fmt</span>::<span class='ident'>Arguments</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
+        <span class='ident'>fmt</span>::<span class='ident'>write</span>(<span class='self'>self</span>, <span class='ident'>args</span>)
     }
 }
-
-<span class='macro'>impl_read</span><span class='macro'>!</span>(<span class='ident'>ByteBuf</span>);
-<span class='macro'>impl_read</span><span class='macro'>!</span>(<span class='ident'>ROByteBuf</span>);
-<span class='macro'>impl_read</span><span class='macro'>!</span>(<span class='ident'>RopeBuf</span>);
-<span class='macro'>impl_read</span><span class='macro'>!</span>(<span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Buf</span><span class='op'>+</span><span class='ident'>Send</span><span class='op'>+</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span>);
-
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>impl_write</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>:<span class='ident'>ty</span>) <span class='op'>=&gt;</span> {
-        <span class='kw'>impl</span> <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span> {
-            <span class='kw'>fn</span> <span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-                <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>has_remaining</span>() {
-                    <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='number'>0</span>);
-                }
-
-                <span class='prelude-val'>Ok</span>(<span class='self'>self</span>.<span class='ident'>write_slice</span>(<span class='ident'>buf</span>))
-            }
-
-            <span class='kw'>fn</span> <span class='ident'>flush</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-                <span class='prelude-val'>Ok</span>(())
-            }
-        }
-    }
-}
-
-<span class='macro'>impl_write</span><span class='macro'>!</span>(<span class='ident'>MutByteBuf</span>);
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

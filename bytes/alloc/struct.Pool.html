@@ -47,19 +47,21 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-49' class='srclink' href='../../src/bytes/src/alloc/pool.rs.html#11-14' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-1170' class='srclink' href='../../src/bytes/src/alloc/pool.rs.html#11-14' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Pool {
     // some fields omitted
-}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../bytes/alloc/struct.Pool.html' title='bytes::alloc::Pool'>Pool</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-65' class='srclink' href='../../src/bytes/src/alloc/pool.rs.html#36-143' title='goto source code'>[src]</a></span></h3>
+}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../bytes/alloc/struct.Pool.html' title='bytes::alloc::Pool'>Pool</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1186' class='srclink' href='../../src/bytes/src/alloc/pool.rs.html#36-150' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.with_capacity' class='method'><code>fn <a href='#method.with_capacity' class='fnname'>with_capacity</a>(cap: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, buf_len: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='../../bytes/alloc/struct.Pool.html' title='bytes::alloc::Pool'>Pool</a></code></h4>
 <div class='docblock'><p>Constructs a new <code>Pool</code> with with specified capacity such that each
 buffer in the pool has a length of <code>buf_len</code>.</p>
 </div><h4 id='method.capacity' class='method'><code>fn <a href='#method.capacity' class='fnname'>capacity</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
 <div class='docblock'><p>Returns the number of buffers that the <code>Pool</code> holds.</p>
+</div><h4 id='method.buffer_len' class='method'><code>fn <a href='#method.buffer_len' class='fnname'>buffer_len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
+<div class='docblock'><p>Returns the size of buffers allocated by the pool</p>
 </div><h4 id='method.new_byte_buf' class='method'><code>fn <a href='#method.new_byte_buf' class='fnname'>new_byte_buf</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../bytes/struct.MutByteBuf.html' title='bytes::MutByteBuf'>MutByteBuf</a>&gt;</code></h4>
 <div class='docblock'><p>Returns a new <code>ByteBuf</code> backed by a buffer from the pool. If the pool
 is depleted, <code>None</code> is returned.</p>
-</div><h4 id='method.new_append_buf' class='method'><code>fn <a href='#method.new_append_buf' class='fnname'>new_append_buf</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../bytes/buf/struct.AppendBuf.html' title='bytes::buf::AppendBuf'>AppendBuf</a>&gt;</code></h4>
+</div><h4 id='method.new_append_buf' class='method'><code>fn <a href='#method.new_append_buf' class='fnname'>new_append_buf</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../bytes/struct.AppendBuf.html' title='bytes::AppendBuf'>AppendBuf</a>&gt;</code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
