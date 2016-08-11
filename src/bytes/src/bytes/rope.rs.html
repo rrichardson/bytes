@@ -838,7 +838,7 @@
                     <span class='comment'>// the same as the given left tree.</span>
                     <span class='kw'>let</span> <span class='ident'>new_right</span> <span class='op'>=</span> <span class='ident'>concat_bytes</span>(<span class='kw-2'>&amp;</span><span class='ident'>left</span>.<span class='ident'>right</span>, <span class='kw-2'>&amp;</span><span class='ident'>right</span>, <span class='ident'>len</span>);
 
-                    <span class='kw'>return</span> <span class='ident'>Rope</span>::<span class='ident'>new</span>(<span class='ident'>left</span>.<span class='ident'>left</span>, <span class='ident'>new_right</span>).<span class='ident'>into_bytes</span>();
+                    <span class='kw'>return</span> <span class='ident'>Rope</span>::<span class='ident'>new</span>(<span class='ident'>left</span>.<span class='ident'>left</span>.<span class='ident'>clone</span>(), <span class='ident'>new_right</span>).<span class='ident'>into_bytes</span>();
                 }
 
                 <span class='kw'>if</span> <span class='ident'>left</span>.<span class='ident'>left</span>.<span class='ident'>depth</span>() <span class='op'>&gt;</span> <span class='ident'>left</span>.<span class='ident'>right</span>.<span class='ident'>depth</span>() <span class='op'>&amp;&amp;</span> <span class='ident'>left</span>.<span class='ident'>depth</span> <span class='op'>&gt;</span> <span class='ident'>right</span>.<span class='ident'>depth</span>() {
@@ -848,12 +848,12 @@
                     <span class='comment'>// the the node on the RHS.  This is yet another optimization</span>
                     <span class='comment'>// for building the string by repeatedly concatenating on the</span>
                     <span class='comment'>// right.</span>
-                    <span class='kw'>let</span> <span class='ident'>new_right</span> <span class='op'>=</span> <span class='ident'>Rope</span>::<span class='ident'>new</span>(<span class='ident'>left</span>.<span class='ident'>right</span>, <span class='ident'>right</span>);
+                    <span class='kw'>let</span> <span class='ident'>new_right</span> <span class='op'>=</span> <span class='ident'>Rope</span>::<span class='ident'>new</span>(<span class='ident'>left</span>.<span class='ident'>right</span>.<span class='ident'>clone</span>(), <span class='ident'>right</span>);
 
-                    <span class='kw'>return</span> <span class='ident'>Rope</span>::<span class='ident'>new</span>(<span class='ident'>left</span>.<span class='ident'>left</span>, <span class='ident'>new_right</span>).<span class='ident'>into_bytes</span>();
+                    <span class='kw'>return</span> <span class='ident'>Rope</span>::<span class='ident'>new</span>(<span class='ident'>left</span>.<span class='ident'>left</span>.<span class='ident'>clone</span>(), <span class='ident'>new_right</span>).<span class='ident'>into_bytes</span>();
                 }
 
-                <span class='ident'>left</span>.<span class='ident'>into_bytes</span>()
+                <span class='ident'>Bytes</span> { <span class='ident'>kind</span>: <span class='kw'>super</span>::<span class='ident'>Kind</span>::<span class='ident'>Rope</span>(<span class='ident'>left</span>) }
             }
             <span class='prelude-val'>Err</span>(<span class='ident'>left</span>) <span class='op'>=&gt;</span> <span class='ident'>left</span>,
         };
@@ -921,7 +921,7 @@
 
     <span class='kw'>fn</span> <span class='ident'>into_bytes</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Bytes</span> {
         <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Kind</span>;
-        <span class='ident'>Bytes</span> { <span class='ident'>kind</span>: <span class='ident'>Kind</span>::<span class='ident'>Rope</span>(<span class='self'>self</span>) }
+        <span class='ident'>Bytes</span> { <span class='ident'>kind</span>: <span class='ident'>Kind</span>::<span class='ident'>Rope</span>(<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='self'>self</span>)) }
     }
 }
 
@@ -989,7 +989,7 @@
         <span class='kw'>match</span> <span class='ident'>src</span>.<span class='ident'>kind</span> {
             <span class='ident'>Kind</span>::<span class='ident'>Seq</span>(<span class='ident'>b</span>) <span class='op'>=&gt;</span> <span class='ident'>Node</span>::<span class='ident'>Seq</span>(<span class='ident'>b</span>),
             <span class='ident'>Kind</span>::<span class='ident'>Small</span>(<span class='ident'>b</span>) <span class='op'>=&gt;</span> <span class='ident'>Node</span>::<span class='ident'>Small</span>(<span class='ident'>b</span>),
-            <span class='ident'>Kind</span>::<span class='ident'>Rope</span>(<span class='ident'>b</span>) <span class='op'>=&gt;</span> <span class='ident'>Node</span>::<span class='ident'>Rope</span>(<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>b</span>)),
+            <span class='ident'>Kind</span>::<span class='ident'>Rope</span>(<span class='ident'>b</span>) <span class='op'>=&gt;</span> <span class='ident'>Node</span>::<span class='ident'>Rope</span>(<span class='ident'>b</span>),
         }
     }
 }
@@ -1306,15 +1306,15 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>unwrap_rope</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Rope</span> {
-        <span class='kw'>match</span> <span class='self'>self</span> {
+        <span class='kw'>let</span> <span class='ident'>arc</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span> {
             <span class='ident'>Partial</span>::<span class='ident'>Bytes</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>into_rope</span>().<span class='ident'>ok</span>().<span class='ident'>expect</span>(<span class='string'>&quot;unexpected state calling `Partial::unwrap_rope()`&quot;</span>),
-            <span class='ident'>Partial</span>::<span class='ident'>Node</span>(<span class='ident'>Node</span>::<span class='ident'>Rope</span>(<span class='ident'>v</span>)) <span class='op'>=&gt;</span> {
-                <span class='kw'>match</span> <span class='ident'>Arc</span>::<span class='ident'>try_unwrap</span>(<span class='ident'>v</span>) {
-                    <span class='prelude-val'>Ok</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>,
-                    <span class='prelude-val'>Err</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> (<span class='op'>*</span><span class='ident'>v</span>).<span class='ident'>clone</span>(),
-                }
-            }
+            <span class='ident'>Partial</span>::<span class='ident'>Node</span>(<span class='ident'>Node</span>::<span class='ident'>Rope</span>(<span class='ident'>v</span>)) <span class='op'>=&gt;</span> <span class='ident'>v</span>,
             _ <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;unexpected state calling `Partial::unwrap_rope()`&quot;</span>),
+        };
+
+        <span class='kw'>match</span> <span class='ident'>Arc</span>::<span class='ident'>try_unwrap</span>(<span class='ident'>arc</span>) {
+            <span class='prelude-val'>Ok</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>,
+            <span class='prelude-val'>Err</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> (<span class='op'>*</span><span class='ident'>v</span>).<span class='ident'>clone</span>(),
         }
     }
 }

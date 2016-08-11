@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["heap","Allocate a segment of memory and return a `MemRef`."]],"struct":[["MemRef",""],["Pool",""]],"trait":[["Mem","Ref-counted segment of memory"]]});
+initSidebarItems({"fn":[["heap","Allocate a segment of memory and return a `MemRef`."]],"struct":[["MemRef",""]]});

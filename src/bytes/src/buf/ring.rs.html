@@ -229,15 +229,6 @@
 <span id="185">185</span>
 <span id="186">186</span>
 <span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> {<span class='ident'>alloc</span>, <span class='ident'>Buf</span>, <span class='ident'>MutBuf</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>cmp</span>, <span class='ident'>fmt</span>};
@@ -264,28 +255,19 @@
 <span class='kw'>impl</span> <span class='ident'>RingBuf</span> {
     <span class='doccomment'>/// Allocates a new `RingBuf` with the specified capacity.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='kw-2'>mut</span> <span class='ident'>capacity</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>RingBuf</span> {
-        <span class='comment'>// Handle the 0 length buffer case</span>
-        <span class='kw'>if</span> <span class='ident'>capacity</span> <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='ident'>RingBuf</span> {
-                <span class='ident'>ptr</span>: <span class='ident'>alloc</span>::<span class='ident'>MemRef</span>::<span class='ident'>none</span>(),
-                <span class='ident'>cap</span>: <span class='number'>0</span>,
+        <span class='comment'>// Round to the next power of 2 for better alignment</span>
+        <span class='ident'>capacity</span> <span class='op'>=</span> <span class='ident'>capacity</span>.<span class='ident'>next_power_of_two</span>();
+
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='ident'>mem</span> <span class='op'>=</span> <span class='ident'>alloc</span>::<span class='ident'>heap</span>(<span class='ident'>capacity</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
+
+            <span class='ident'>RingBuf</span> {
+                <span class='ident'>ptr</span>: <span class='ident'>mem</span>,
+                <span class='ident'>cap</span>: <span class='ident'>capacity</span>,
                 <span class='ident'>pos</span>: <span class='number'>0</span>,
                 <span class='ident'>len</span>: <span class='number'>0</span>,
                 <span class='ident'>mark</span>: <span class='ident'>Mark</span>::<span class='ident'>NoMark</span>,
             }
-        }
-
-        <span class='comment'>// Round to the next power of 2 for better alignment</span>
-        <span class='ident'>capacity</span> <span class='op'>=</span> <span class='ident'>capacity</span>.<span class='ident'>next_power_of_two</span>();
-
-        <span class='kw'>let</span> <span class='ident'>mem</span> <span class='op'>=</span> <span class='ident'>alloc</span>::<span class='ident'>heap</span>(<span class='ident'>capacity</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
-
-        <span class='ident'>RingBuf</span> {
-            <span class='ident'>ptr</span>: <span class='ident'>mem</span>,
-            <span class='ident'>cap</span>: <span class='ident'>capacity</span>,
-            <span class='ident'>pos</span>: <span class='number'>0</span>,
-            <span class='ident'>len</span>: <span class='number'>0</span>,
-            <span class='ident'>mark</span>: <span class='ident'>Mark</span>::<span class='ident'>NoMark</span>,
         }
     }
 

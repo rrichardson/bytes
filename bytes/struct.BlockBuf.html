@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-74' class='srclink' href='../src/bytes/src/buf/block.rs.html#15-20' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-75' class='srclink' href='../src/bytes/src/buf/block.rs.html#15-20' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct BlockBuf {
     // some fields omitted
 }</pre><div class='docblock'><p>Append only buffer backed by a chain of <code>AppendBuf</code> buffers.</p>
@@ -55,8 +55,8 @@
 <p>Each <code>AppendBuf</code> block is of a fixed size and allocated on demand. This
 makes the total capacity of a <code>BlockBuf</code> potentially much larger than what
 is currently allocated.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../bytes/struct.BlockBuf.html' title='bytes::BlockBuf'>BlockBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-89' class='srclink' href='../src/bytes/src/buf/block.rs.html#38-211' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(max_blocks: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, new_block: <a class='enum' href='../bytes/enum.NewBlock.html' title='bytes::NewBlock'>NewBlock</a>) -&gt; <a class='struct' href='../bytes/struct.BlockBuf.html' title='bytes::BlockBuf'>BlockBuf</a></code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../bytes/struct.BlockBuf.html' title='bytes::BlockBuf'>BlockBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-88' class='srclink' href='../src/bytes/src/buf/block.rs.html#38-266' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(max_blocks: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, block_size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='../bytes/struct.BlockBuf.html' title='bytes::BlockBuf'>BlockBuf</a></code></h4>
 <div class='docblock'><p>Create BlockBuf</p>
 </div><h4 id='method.len' class='method'><code>fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
 <div class='docblock'><p>Returns the number of buffered bytes</p>
@@ -75,14 +75,15 @@ value.</p>
 
 <h1 id='panics-1' class='section-header'><a href='#panics-1'>Panics</a></h1>
 <p>Panics if <code>n</code> is greater than the number of buffered bytes.</p>
-</div><h4 id='method.compact' class='method'><code>fn <a href='#method.compact' class='fnname'>compact</a>(&amp;mut self)</code></h4>
+</div><h4 id='method.is_compact' class='method'><code>fn <a href='#method.is_compact' class='fnname'>is_compact</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.compact' class='method'><code>fn <a href='#method.compact' class='fnname'>compact</a>(&amp;mut self)</code></h4>
 <div class='docblock'><p>Moves all buffered bytes into a single block.</p>
 
 <h1 id='panics-2' class='section-header'><a href='#panics-2'>Panics</a></h1>
 <p>Panics if the buffered bytes cannot fit in a single block.</p>
 </div><h4 id='method.bytes' class='method'><code>fn <a href='#method.bytes' class='fnname'>bytes</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>&gt;</code></h4>
 <div class='docblock'><p>Return byte slice if bytes are in sequential memory</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../bytes/trait.MutBuf.html' title='bytes::MutBuf'>MutBuf</a> for <a class='struct' href='../bytes/struct.BlockBuf.html' title='bytes::BlockBuf'>BlockBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-158' class='srclink' href='../src/bytes/src/buf/block.rs.html#213-260' title='goto source code'>[src]</a></span></h3>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../bytes/trait.MutBuf.html' title='bytes::MutBuf'>MutBuf</a> for <a class='struct' href='../bytes/struct.BlockBuf.html' title='bytes::BlockBuf'>BlockBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-179' class='srclink' href='../src/bytes/src/buf/block.rs.html#268-306' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.remaining' class='method'><code>fn <a href='../bytes/trait.MutBuf.html#tymethod.remaining' class='fnname'>remaining</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
 <div class='docblock'><p>Returns the number of bytes that can be written to the MutBuf</p>
 </div><h4 id='method.has_remaining' class='method'><code>fn <a href='../bytes/trait.MutBuf.html#method.has_remaining' class='fnname'>has_remaining</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
@@ -95,7 +96,7 @@ value.</p>
 <h4 id='method.write_slice' class='method'><code>fn <a href='../bytes/trait.MutBuf.html#method.write_slice' class='fnname'>write_slice</a>(&amp;mut self, src: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
 <div class='docblock'><p>Write bytes from the given slice into the <code>MutBuf</code> and advance the cursor by the number of bytes written. Returns the number of bytes written. <a href="../bytes/trait.MutBuf.html#method.write_slice">Read more</a></p>
 </div><h4 id='method.write_str' class='method'><code>fn <a href='../bytes/trait.MutBuf.html#method.write_str' class='fnname'>write_str</a>(&amp;mut self, src: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-</div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../bytes/struct.BlockBuf.html' title='bytes::BlockBuf'>BlockBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-177' class='srclink' href='../src/bytes/src/buf/block.rs.html#262-266' title='goto source code'>[src]</a></span></h3>
+</div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../bytes/struct.BlockBuf.html' title='bytes::BlockBuf'>BlockBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-196' class='srclink' href='../src/bytes/src/buf/block.rs.html#308-312' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.default' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class='struct' href='../bytes/struct.BlockBuf.html' title='bytes::BlockBuf'>BlockBuf</a></code></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>
