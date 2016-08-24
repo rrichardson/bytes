@@ -307,14 +307,9 @@
 <span class='kw'>impl</span> <span class='ident'>ByteBuf</span> {
     <span class='doccomment'>/// Create a new `ByteBuf` by copying the contents of the given slice.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_slice</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>ByteBuf</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>ByteBuf</span>::<span class='ident'>mut_with_capacity</span>(<span class='ident'>bytes</span>.<span class='ident'>len</span>());
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>MutByteBuf</span>::<span class='ident'>with_capacity</span>(<span class='ident'>bytes</span>.<span class='ident'>len</span>());
         <span class='ident'>buf</span>.<span class='ident'>write_slice</span>(<span class='ident'>bytes</span>);
         <span class='ident'>buf</span>.<span class='ident'>flip</span>()
-    }
-
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>mut_with_capacity</span>(<span class='ident'>capacity</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>MutByteBuf</span> {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>capacity</span> <span class='op'>&lt;=</span> <span class='ident'>MAX_CAPACITY</span>);
-        <span class='ident'>MutByteBuf</span> { <span class='ident'>buf</span>: <span class='ident'>ByteBuf</span>::<span class='ident'>new</span>(<span class='ident'>capacity</span> <span class='kw'>as</span> <span class='ident'>u32</span>) }
     }
 
     <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_mem_ref</span>(<span class='ident'>mem</span>: <span class='ident'>alloc</span>::<span class='ident'>MemRef</span>, <span class='ident'>cap</span>: <span class='ident'>u32</span>, <span class='ident'>pos</span>: <span class='ident'>u32</span>, <span class='ident'>lim</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>ByteBuf</span> {
@@ -465,6 +460,11 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>MutByteBuf</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>with_capacity</span>(<span class='ident'>capacity</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>MutByteBuf</span> {
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>capacity</span> <span class='op'>&lt;=</span> <span class='ident'>MAX_CAPACITY</span>);
+        <span class='ident'>MutByteBuf</span> { <span class='ident'>buf</span>: <span class='ident'>ByteBuf</span>::<span class='ident'>new</span>(<span class='ident'>capacity</span> <span class='kw'>as</span> <span class='ident'>u32</span>) }
+    }
+
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>capacity</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
         <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>capacity</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
     }

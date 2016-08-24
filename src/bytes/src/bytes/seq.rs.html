@@ -124,7 +124,7 @@
 </pre><pre class='rust '>
 <span class='doccomment'>//! Immutable set of bytes sequential in memory.</span>
 
-<span class='kw'>use</span> {<span class='ident'>alloc</span>, <span class='ident'>ByteBuf</span>, <span class='ident'>MutBuf</span>};
+<span class='kw'>use</span> {<span class='ident'>alloc</span>, <span class='ident'>MutByteBuf</span>, <span class='ident'>MutBuf</span>};
 <span class='kw'>use</span> <span class='ident'>bytes</span>::{<span class='ident'>Bytes</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Cursor</span>;
@@ -137,7 +137,7 @@
 
 <span class='kw'>impl</span> <span class='ident'>Seq</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_slice</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>Bytes</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>ByteBuf</span>::<span class='ident'>mut_with_capacity</span>(<span class='ident'>bytes</span>.<span class='ident'>len</span>());
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>MutByteBuf</span>::<span class='ident'>with_capacity</span>(<span class='ident'>bytes</span>.<span class='ident'>len</span>());
 
         <span class='ident'>buf</span>.<span class='ident'>copy_from</span>(<span class='ident'>bytes</span>);
         <span class='ident'>buf</span>.<span class='ident'>flip</span>().<span class='ident'>into</span>()
